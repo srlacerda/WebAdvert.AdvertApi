@@ -33,9 +33,29 @@ namespace AdvertApi.Services
             return dbModel.Id;
         }
 
-        public Task<bool> Confirm(ConfirmAdvertModel model)
+        public async Task Confirm(ConfirmAdvertModel model)
         {
-            throw new NotImplementedException();
+            using (var client = new AmazonDynamoDBClient())
+            {
+                using (var context = new DynamoDBContext(client))
+                {
+                    var record = await context.LoadAsync<AdvertDbModel>(model.Id);
+
+                    if (record == null)
+                    {
+                        throw new KeyNotFoundException($"A record with ID={model.Id} was not found");
+                    }
+                    if (model.Status == AdvertStatus.Active) 
+                    {
+                        record.Status = AdvertStatus.Active;
+                        await context.SaveAsync(record);
+                    }
+                    else
+                    {
+                        await context.DeleteAsync(record);
+                    }
+                }
+            }
         }
     }
 }

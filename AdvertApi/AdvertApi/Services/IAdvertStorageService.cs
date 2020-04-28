@@ -10,6 +10,7 @@ namespace AdvertApi.Services
     {
         Task<string> Add(AdvertModel model);
 
-        Task<bool> Confirm(ConfirmAdvertModel model);
+        //Task<bool> Confirm(ConfirmAdvertModel model);
+        Task Confirm(ConfirmAdvertModel model);
     }
 }

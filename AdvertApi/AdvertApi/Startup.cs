@@ -28,6 +28,7 @@ namespace AdvertApi
         {
             //services.AddAutoMapper();
             services.AddAutoMapper(typeof(AdvertProfile));
+            services.AddTransient<IAdvertStorageService, DynamoDBAdvertStorage>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
