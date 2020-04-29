@@ -12,10 +12,10 @@ namespace AdvertApi.Controllers
 {
     [ApiController]
     [Route("adverts/v1")]
-    public class AdvertController : ControllerBase
+    public class Advert : ControllerBase
     {
         private readonly IAdvertStorageService _advertStorageServie;
-        public AdvertController(IAdvertStorageService advertStorageService)
+        public Advert(IAdvertStorageService advertStorageService)
         {
             _advertStorageServie = advertStorageService;
         }
