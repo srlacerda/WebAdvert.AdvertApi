@@ -35,24 +35,12 @@ namespace AdvertApi.Services
 
         public async Task<bool> CheckHealthAsync()
         {
-            try
-
-
+            Console.WriteLine("Health checking...");
+            using (var client = new AmazonDynamoDBClient())
             {
-                Console.WriteLine("Health checking...");
-                using (var client = new AmazonDynamoDBClient())
-                {
-                    var tableData = await client.DescribeTableAsync("Adverts");
-                    return string.Compare(tableData.Table.TableStatus, "active", true) == 0;
-                }
+                var tableData = await client.DescribeTableAsync("Adverts");
+                return string.Compare(tableData.Table.TableStatus, "active", true) == 0;
             }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-           
         }
         public async Task Confirm(ConfirmAdvertModel model)
         {
@@ -66,7 +54,7 @@ namespace AdvertApi.Services
                     {
                         throw new KeyNotFoundException($"A record with ID={model.Id} was not found");
                     }
-                    if (model.Status == AdvertStatus.Active) 
+                    if (model.Status == AdvertStatus.Active)
                     {
                         record.Status = AdvertStatus.Active;
                         await context.SaveAsync(record);
