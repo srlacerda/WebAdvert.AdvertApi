@@ -49,8 +49,8 @@ namespace AdvertApi.Controllers
             return StatusCode(201, new CreateAdvertResponse { Id = recordId });
         }
 
-        [HttpPost]
-        [Route("Confirm")]
+        [HttpPut]
+        [Route("confirm")]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Confirm(ConfirmAdvertModel model)
@@ -76,17 +76,26 @@ namespace AdvertApi.Controllers
         {
             var topicArn = Configuration.GetValue<string>("TopicArn");
             var dbModel = await _advertStorageService.GetById(model.Id);
-            using (var client = new AmazonSimpleNotificationServiceClient())
+            try
             {
-                var message = new AdvertConfirmedMessage
+                using (var client = new AmazonSimpleNotificationServiceClient())
                 {
-                    Id = model.Id,
-                    Title = dbModel.Title
-                };
+                    var message = new AdvertConfirmedMessage
+                    {
+                        Id = model.Id,
+                        Title = dbModel.Title
+                    };
 
-                var messageJson = JsonConvert.SerializeObject(message);
-                await client.PublishAsync(topicArn, messageJson);
+                    var messageJson = JsonConvert.SerializeObject(message);
+                    await client.PublishAsync(topicArn, messageJson);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            
         }
     }
 }
