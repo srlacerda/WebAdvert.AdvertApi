@@ -77,6 +77,7 @@ namespace AdvertApi
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseHealthChecks("/health");
             app.UseSwagger();
             app.UseSwaggerUI(c =>
