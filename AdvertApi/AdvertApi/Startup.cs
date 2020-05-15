@@ -41,6 +41,11 @@ namespace AdvertApi
             //    checks.AddCheck<StorageHealthCheck>("Storage", new System.TimeSpan(0, 1, 0));
             //});
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllOrigin", policy => policy.WithOrigins("*").AllowAnyHeader());
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
